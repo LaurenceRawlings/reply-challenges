@@ -36,9 +36,11 @@ class Reader:
                     skills.append(dev[3+j])
 
                 devs.append({
+                    'id': i,
                     'company': dev[0],
                     'bonus': int(dev[1]),
-                    'skills': skills
+                    'skills': skills,
+                    'seat': 'X'
                 })
 
             dict.update( { 'devs': devs } )
@@ -50,8 +52,10 @@ class Reader:
                 pm = lines[line].split(' ')
 
                 pms.append({
+                    'id': i,
                     'company': pm[0],
                     'bonus': int(pm[1]),
+                    'seat': 'X'
                 })
 
             dict.update( { 'pms': pms } )
