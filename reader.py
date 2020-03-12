@@ -9,7 +9,7 @@ class Reader:
             dict = {
                 'width': 0,
                 'height': 0,
-                'map': [[]],
+                'office': [[]],
                 'devs': [],
                 'pms': []
             }
@@ -19,12 +19,12 @@ class Reader:
             dict.update( { 'height': int(dimensions[1]) } )
             
             line = 1
-            map = []
+            office = []
             for i in range(0, int(dimensions[1])):
                 map.append(list(lines[line]))
                 line += 1
 
-            dict.update( { 'map': map } )
+            dict.update( { 'office': office } )
 
             devs = []
             for i in range(0, int(lines[line])):
