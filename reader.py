@@ -7,9 +7,53 @@ class Reader:
         with open(self.path, 'r') as file:
             lines = file.read().split('\n')
             dict = {
-                '': [],
-                '': [],
-                '': 0
+                'width': 0,
+                'height': 0,
+                'map': [[]],
+                'devs': [],
+                'pms': []
             }
 
-        return dict
+            dimensions = lines[0].split(' ')
+            dict.update( { 'width':  int(dimensions[0]) } )
+            dict.update( { 'height': int(dimensions[1]) } )
+            
+            line = 1
+            map = []
+            for i in range(0, int(dimensions[1])):
+                map.append(list(lines[line]))
+                line += 1
+
+            dict.update( { 'map': map } )
+
+            devs = []
+            for i in range(0, int(lines[line])):
+                line += 1
+                dev = lines[line].split(' ')
+
+                skills = []
+                for j in range(0, int(dev[2])):
+                    skills.append(dev[3+j])
+
+                devs.append({
+                    'company': dev[0],
+                    'bonus': int(dev[1]),
+                    'skills': skills
+                })
+
+            dict.update( { 'devs': devs } )
+
+            line += 1
+            pms = []
+            for i in range(0, int(lines[line])):
+                line += 1
+                pm = lines[line].split(' ')
+
+                pms.append({
+                    'company': pm[0],
+                    'bonus': int(pm[1]),
+                })
+
+            dict.update( { 'pms': pms } )
+
+            return dict
