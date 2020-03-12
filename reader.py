@@ -21,7 +21,7 @@ class Reader:
             line = 1
             office = []
             for i in range(0, int(dimensions[1])):
-                map.append(list(lines[line]))
+                office.append(list(lines[line]))
                 line += 1
 
             dict.update( { 'office': office } )
