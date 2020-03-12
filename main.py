@@ -19,6 +19,7 @@ def calculate(dict):
     global devs
     global pms
     global unseated_devs
+    global unseated_pms
 
     width = dict.get('width')
     height = dict.get('height')
@@ -29,56 +30,25 @@ def calculate(dict):
     unseated_devs = []
     for dev in devs:
         unseated_devs.append(dev)
+
+    unseated_pms = []
+    for pm in pms:
+        unseated_pms.append(pm)    
     
     for row in range(0, height):
         for seat in range(0, width):
             symbol = office[row][seat]
-            r_int = randint(0, len(unseated_devs)-1)
-            if symbol == '_':
-                if row == 0:
-                    if seat == 0:
-                        office[row][seat] = 'D' + str(unseated_devs[r_int]['id'])
-                        seat_dev(seat, row, unseated_devs[r_int])
-                    else:
-                        left_neighbour = office[row][seat-1]
-                        if left_neighbour == '#' or left_neighbour == 'M':
-                            office[row][seat] = 'D' + str(unseated_devs[r_int]['id'])
-                            seat_dev(seat, row, unseated_devs[r_int])
-                        else:
-                            office[row][seat] = 'D' + str(unseated_devs[r_int]['id'])
-                            seat_dev(seat, row, unseated_devs[r_int])
-                elif seat == 0:
-                    above_neighbour = office[row-1][seat]
-                    if above_neighbour == '#' or above_neighbour == 'M':
-                        office[row][seat] = 'D' + str(unseated_devs[r_int]['id'])
-                        seat_dev(seat, row, unseated_devs[r_int])
-                    else:
-                        office[row][seat] = 'D' + str(unseated_devs[r_int]['id'])
-                        seat_dev(seat, row, unseated_devs[r_int])
-                else:
-                    above_neighbour = office[row-1][seat]
-                    left_neighbour = office[row][seat-1]
-                    if above_neighbour[0] == 'D' and left_neighbour[0] == 'D':
-                        office[row][seat] = 'D' + str(unseated_devs[r_int]['id'])
-                        seat_dev(seat, row, unseated_devs[r_int])
-                    elif above_neighbour[0] == 'D':
-                        office[row][seat] = 'D' + str(unseated_devs[r_int]['id'])
-                        seat_dev(seat, row, unseated_devs[r_int])
-                    elif left_neighbour[0] == 'D':
-                        office[row][seat] = 'D' + str(unseated_devs[r_int]['id'])
-                        seat_dev(seat, row, unseated_devs[r_int])
-                    else:
-                        office[row][seat] = 'D' + str(unseated_devs[r_int]['id'])
-                        seat_dev(seat, row, unseated_devs[r_int])
-
-                         
-    for row in range(0, height):
-        for seat in range(0, width):
-            symbol = office[row][seat]
             
-            if symbol == 'M':
-                pass
-                        
+            if symbol == '_':
+                r_int = randint(0, len(unseated_devs)-1)
+                office[row][seat] = 'D' + str(unseated_devs[r_int]['id'])
+                seat_dev(seat, row, unseated_devs[r_int])
+
+            elif symbol == 'M':
+                if not(len(unseated_pms) == 0):
+                    r_int = randint(0, len(unseated_pms)-1)
+                    office[row][seat] = 'M' + str(unseated_pms[r_int]['id'])
+                    seat_pm(seat, row, unseated_pms[r_int])      
 
     devs_return = sorted(devs, key=lambda i:i['id'], reverse=False)
     pms_return = sorted(pms, key=lambda i:i['id'], reverse=False)
@@ -98,6 +68,20 @@ def seat_dev(x, y, dev):
     unseated_devs.remove(dev)
     devs.append(dev)
 
+def seat_pm(x, y, pm):
+    global width
+    global height
+    global office
+    global devs
+    global pms
+    global unseated_devs
+    global unseated_pms
+    pms.remove(pm)
+    pm.update( { 'seat': str(x) + " " + str(y) } )
+    unseated_pms.remove(pm)
+    pms.append(pm)
+
+
 
 def get_dev(id):
     global width
@@ -106,9 +90,7 @@ def get_dev(id):
     global devs
     global pms
     global unseated_devs
-    for dev in devs:
-        if int(dev.get('id')) == int(id):
-            return dev
+    return next(dev for dev in devs if dev['id'] == id)
 
 def get_pm(id):
     global width
